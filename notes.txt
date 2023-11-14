@@ -1,0 +1,11 @@
+#Notes
+nmcli dev wifi con "eduroam" primarily connects to an SSID "eduroam". If a suitable profile exists (for that SSID) it will aim to use that, and otherwise it will create a new profile. From the provided information it's not clear that the profile you have is suitable, or whether NM tries to create a new profile (for which indeed there would be no secrets). Use instead nmcli connection up "$PROFILE" (where $PROFILE is the name of your profile -- incidentally also eduroam or 1af84c26-3e35-43fe-9333-77b7fc2ddf3f).
+
+Btw, see all profiles with nmcli connection, see all devices with nmcli device, and see all Wi-Fi networks in range with nmcli device wifi.
+
+Second, pass --ask to nmcli, so it can prompt you for a password. With 802-1x there are a variety of password properties that may be required. It's not clear from the mangled profile that you attached, whether you specified all the necessary passwords. By allowing nmcli to prompt you for the secret, you can provide it if it's really missing -- and you see what NetworkManager thinks is missing.
+
+Also, the way to debug problems is by looking at the logfile. Possibly with enabling level=TRACE logging. See https://cgit.freedesktop.org/NetworkManager/NetworkManager/tree/contrib/fedora/rpm/NetworkManager.conf#n28 for hints about logging.
+
+"Delete and recreate a profile" or "restart NetworkManager service" is almost never the right solution. Such advice is questionable.
+https://www.reddit.com/r/linuxquestions/comments/icqqyu/problems_with_networkmanager_and_a_8021x/
